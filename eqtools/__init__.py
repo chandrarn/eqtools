@@ -19,7 +19,6 @@
 """Provides classes for interacting with magnetic equilibrium data in a variety of formats.
 """
 
-<<<<<<< HEAD
 __version__ = '1.5.0'
 
 from .core import *
@@ -32,13 +31,3 @@ from .core import *
 # from .pfilereader import *
 # from .FromArrays import *
 # from .TCVLIUQE import *
-=======
-from .core import *
-from .EFIT import *
-from .CModEFIT import *
-from .NSTXEFIT import *
-from .eqdskreader import *
-from .pfilereader import *
-from .FromArrays import *
-from .filewriter import *
->>>>>>> dev
