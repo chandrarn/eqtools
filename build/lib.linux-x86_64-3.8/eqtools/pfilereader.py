@@ -21,15 +21,9 @@ This module contains the :py:class:`PFileReader` class, a lightweight data
 handler for p-file (radial profile) datasets.
 
 Classes:
-<<<<<<< HEAD
-    PFileReader:
-        Data-storage class for p-file data.  Reads
-        data from ASCII p-file, storing as copy-safe object
-=======
     PFileReader: 
         Data-storage class for p-file data.  Reads 
         data from ASCII p-file, storing as copy-safe object 
->>>>>>> dev
         attributes.
 """
 
@@ -40,15 +34,6 @@ from collections import namedtuple
 
 
 class PFileReader(object):
-<<<<<<< HEAD
-    """Class to read ASCII p-file (profile data storage) into lightweight,
-    user-friendly data structure.
-
-    P-files store data blocks containing the following: a header with parameter
-    name, parameter units, x-axis units, and number of data points, followed by
-    values of axis x, parameter y, and derivative dy/dx.  Each parameter block
-    is read into a namedtuple storing
-=======
     """Class to read ASCII p-file (profile data storage) into lightweight, 
     user-friendly data structure.  
 
@@ -56,7 +41,6 @@ class PFileReader(object):
     name, parameter units, x-axis units, and number of data points, followed by 
     values of axis x, parameter y, and derivative dy/dx.  Each parameter block 
     is read into a namedtuple storing 
->>>>>>> dev
 
     ======== ==============
     'name'   parameter name
@@ -68,30 +52,18 @@ class PFileReader(object):
     'units'  data units
     ======== ==============
 
-<<<<<<< HEAD
-    with each namedtuple stored as an attribute of the PFileReader  instance.
-    This gracefully handles variable formats of p-files (differing versions of
-    p-files will have different parameters stored).  Data blocks are accessed
-    as attributes in a copy-safe manner.
-
-=======
     with each namedtuple stored as an attribute of the PFileReader  instance.  
     This gracefully handles variable formats of p-files (differing versions of 
     p-files will have different parameters stored).  Data blocks are accessed 
     as attributes in a copy-safe manner.
     
->>>>>>> dev
     Creates instance of PFileReader.
 
     Args:
         pfile (String): Path to ASCII p-file to be loaded.
 
     Keyword Args:
-<<<<<<< HEAD
-        verbose (Boolean): Option to print message on object creation
-=======
         verbose (Boolean): Option to print message on object creation 
->>>>>>> dev
             listing available data parameters. Defaults to True.
 
     Examples:
@@ -112,27 +84,6 @@ class PFileReader(object):
         Available parameters in pfr may be listed via the overridden __str__
         command.
     """
-<<<<<<< HEAD
-    def __init__(self, pfile, verbose=True):
-        self._pfile = pfile
-        self._params = []
-
-        with open(pfile, 'r') as readfile:
-            dia = csv.excel()
-            dia.skipinitialspace = True
-            reader = csv.reader(readfile, dia, delimiter=' ')
-
-            # define data structure as named tuple for storing parameter values
-            data = namedtuple(
-                'DataStruct',
-                ['name', 'npts', 'units', 'xunits', 'x', 'y', 'dydx']
-            )
-
-            # iterate through lines of file, checking for a header line;
-            # at each header, read the next npts lines of data into
-            # appropriate arrays.
-            # continue until no headerline is found (throws StopIteration).
-=======
     def __init__(self,pfile,verbose=True):
         self._pfile = pfile
         self._params = []
@@ -150,7 +101,6 @@ class PFileReader(object):
             # at each header, read the next npts lines of data into 
             # appropriate arrays.
             # continue until no headerline is found (throws StopIteration).  
->>>>>>> dev
             # Populate list of params with available variables.
             while True:
                 try:
@@ -160,11 +110,7 @@ class PFileReader(object):
 
                 npts = int(headerline[0])               # size of abscissa, data arrays
                 abscis = headerline[1]                  # string name of abscissa variable (e.g. 'psinorm')
-<<<<<<< HEAD
-                var = re.split(r'[\(\)]', headerline[2])
-=======
                 var = re.split('[\(\)]',headerline[2])
->>>>>>> dev
                 param = var[0]                          # string name of parameter (e.g. 'ne')
                 units = var[1]                          # string name of units (e.g. '10^20/m^3')
 
@@ -210,21 +156,12 @@ class PFileReader(object):
         return mes
 
     def __getattribute__(self, name):
-<<<<<<< HEAD
-        """Copy-safe attribute retrieval method overriding default
-        object.__getattribute__.
-
-        Tries to retrieve attribute as-written (first check for default object
-        attributes).  If that fails, looks for pseudo-private attributes, marked
-        by preceding underscore, to retrieve data blocks.  If this fails,
-=======
         """Copy-safe attribute retrieval method overriding default 
         object.__getattribute__.
 
         Tries to retrieve attribute as-written (first check for default object 
         attributes).  If that fails, looks for pseudo-private attributes, marked
         by preceding underscore, to retrieve data blocks.  If this fails, 
->>>>>>> dev
         raise AttributeError.
 
         Args:
@@ -235,17 +172,10 @@ class PFileReader(object):
             AttributeError: if no attribute can be found.
         """
         try:
-<<<<<<< HEAD
-            return super(PFileReader, self).__getattribute__(name)
-        except AttributeError:
-            try:
-                attr = super(PFileReader, self).__getattribute__('_'+name)
-=======
             return super(PFileReader,self).__getattribute__(name)
         except AttributeError:
             try:
                 attr = super(PFileReader,self).__getattribute__('_'+name)
->>>>>>> dev
                 if type(attr) is list:
                     return attr[:]
                 else:
@@ -254,19 +184,11 @@ class PFileReader(object):
                 raise AttributeError('No attribute "%s" found' % name)
 
     def __setattr__(self, name, value):
-<<<<<<< HEAD
-        """Copy-safe attribute setting method overriding default
-        `object.__setattr__`.
-
-        Raises error if object already has attribute `_{name}` for input name,
-        as such an attribute would interfere with automatic property generation
-=======
         """Copy-safe attribute setting method overriding default 
         `object.__setattr__`.
 
         Raises error if object already has attribute `_{name}` for input name,
         as such an attribute would interfere with automatic property generation 
->>>>>>> dev
         in :py:meth:`__getattribute__`.
 
         Args:
@@ -277,20 +199,9 @@ class PFileReader(object):
                 pseudo-private name.
         """
         if hasattr(self, '_'+name):
-<<<<<<< HEAD
-            raise AttributeError(
-                "PFileReader object already has data attribute"
-                " '_%(n)s', creating attribute '%(n)s' will"
-                " conflict with automatic property generation."
-                % {'n': name}
-            )
-        else:
-            super(PFileReader, self).__setattr__(name, value)
-=======
             raise AttributeError("PFileReader object already has data attribute"
                                  " '_%(n)s', creating attribute '%(n)s' will"
                                  " conflict with automatic property generation."
                                  % {'n': name})
         else:
             super(PFileReader, self).__setattr__(name, value)
->>>>>>> dev

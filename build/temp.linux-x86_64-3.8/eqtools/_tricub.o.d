@@ -1,0 +1,2 @@
+build/temp.linux-x86_64-3.8/eqtools/_tricub.o: eqtools/_tricub.c
+commandline: -Ibuild/src.linux-x86_64-3.8/build/src.linux-x86_64-3.8/eqtools -I/home/rianc/venv_eqtools/lib/python3.8/site-packages/numpy/core/include -I/home/rianc/venv_eqtools/include -I/usr/include/python3.8 -c-Ibuild/src.linux-x86_64-3.8/build/src.linux-x86_64-3.8/eqtools -I/home/rianc/venv_eqtools/lib/python3.8/site-packages/numpy/core/include -I/home/rianc/venv_eqtools/include -I/usr/include/python3.8

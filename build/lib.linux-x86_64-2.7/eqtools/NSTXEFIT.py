@@ -16,19 +16,11 @@
 # You should have received a copy of the GNU General Public License
 # along with EqTools.  If not, see <http://www.gnu.org/licenses/>.
 
-<<<<<<< HEAD
-"""This module provides classes inheriting :py:class:`eqtools.EFIT.EFITTree` for
-working with NSTX EFIT data.
-"""
-
-import numpy
-=======
 """This module provides classes inheriting :py:class:`eqtools.EFIT.EFITTree` for 
 working with NSTX EFIT data.
 """
 
 import scipy
->>>>>>> dev
 
 from .EFIT import EFITTree
 from .core import PropertyAccessMixin, ModuleWarning
@@ -37,10 +29,7 @@ import warnings
 
 try:
     import MDSplus
-<<<<<<< HEAD
-=======
     from MDSplus._treeshr import TreeException
->>>>>>> dev
     _has_MDS = True
 except Exception as _e_MDS:
     if isinstance(_e_MDS, ImportError):
@@ -55,10 +44,6 @@ except Exception as _e_MDS:
                       ModuleWarning)
     _has_MDS = False
 
-<<<<<<< HEAD
-
-=======
->>>>>>> dev
 class NSTXEFITTree(EFITTree):
     """Inherits :py:class:`~gptools.EFIT.EFITTree` class. Machine-specific data
     handling class for the National Spherical Torus Experiment (NSTX). Pulls EFIT
@@ -66,32 +51,20 @@ class NSTXEFITTree(EFITTree):
     variable or set of variables is recovered with a corresponding getter method.
     Essential data for EFIT mapping are pulled on initialization (e.g. psirz grid).
     Additional data are pulled at the first request and stored for subsequent usage.
-<<<<<<< HEAD
-
-=======
     
->>>>>>> dev
     Intializes NSTX version of EFITTree object.  Pulls data from MDS tree for storage
     in instance attributes.  Core attributes are populated from the MDS tree on initialization.
     Additional attributes are initialized as None, filled on the first request to the object.
 
     Args:
         shot (integer): NSTX shot index (long)
-<<<<<<< HEAD
-
-=======
     
->>>>>>> dev
     Keyword Args:
         tree (string): Optional input for EFIT tree, defaults to 'EFIT01'
             (i.e., EFIT data are under \\EFIT01::top.results).
         length_unit (string): Sets the base unit used for any quantity whose
             dimensions are length to any power. Valid options are:
-<<<<<<< HEAD
-
-=======
                 
->>>>>>> dev
                 ===========  ===========================================================================================
                 'm'          meters
                 'cm'         centimeters
@@ -104,15 +77,6 @@ class NSTXEFITTree(EFITTree):
                 'hand'       hands
                 'default'    whatever the default in the tree is (no conversion is performed, units may be inconsistent)
                 ===========  ===========================================================================================
-<<<<<<< HEAD
-
-            Default is 'm' (all units taken and returned in meters).
-        gfile (string): Optional input for EFIT geqdsk location name,
-            defaults to 'geqdsk' (i.e., EFIT data are under
-            \\tree::top.results.GEQDSK)
-        afile (string): Optional input for EFIT aeqdsk location name,
-            defaults to 'aeqdsk' (i.e., EFIT data are under
-=======
                 
             Default is 'm' (all units taken and returned in meters).
         gfile (string): Optional input for EFIT geqdsk location name,
@@ -120,7 +84,6 @@ class NSTXEFITTree(EFITTree):
             \\tree::top.results.GEQDSK)
         afile (string): Optional input for EFIT aeqdsk location name,
             defaults to 'aeqdsk' (i.e., EFIT data are under 
->>>>>>> dev
             \\tree::top.results.AEQDSK)
         tspline (Boolean): Sets whether or not interpolation in time is
             performed using a tricubic spline or nearest-neighbor
@@ -138,18 +101,8 @@ class NSTXEFITTree(EFITTree):
         root = '\\'+tree+'::top.results.'
 
         if not _has_MDS:
-<<<<<<< HEAD
-            print("MDSplus module did not load properly. Exception is below:")
-            print(_e_MDS.__class__)
-            print(_e_MDS.message)
-            print(
-                "Most functionality will not be available! (But pickled data "
-                "will still be accessible.)"
-            )
-=======
             print("ERROR: MDSplus module did not load properly. Exception is below:")
             raise _e_MDS
->>>>>>> dev
 
         super(NSTXEFITTree, self).__init__(shot,
                                            tree,
@@ -159,11 +112,7 @@ class NSTXEFITTree(EFITTree):
                                            afile=afile,
                                            tspline=tspline,
                                            monotonic=monotonic)
-<<<<<<< HEAD
-
-=======
         
->>>>>>> dev
     def getFluxGrid(self):
         """returns EFIT flux grid.
 
@@ -172,29 +121,6 @@ class NSTXEFITTree(EFITTree):
 
         Raises:
             ValueError: if module cannot retrieve data from MDS tree.
-<<<<<<< HEAD
-         """
-
-        if self._psiRZ is None:
-            try:
-                psinode = self._MDSTree.getNode(
-                    self._root+self._gfile+':psirz'
-                )
-                self._psiRZ = psinode.data()
-                self._rGrid = psinode.dim_of(1).data()[0]
-                self._zGrid = psinode.dim_of(2).data()[0]
-                self._defaultUnits['_psiRZ'] = str(psinode.units)
-                self._defaultUnits['_rGrid'] = str(psinode.dim_of(1).units)
-                self._defaultUnits['_zGrid'] = str(psinode.dim_of(2).units)
-            except Exception:
-                raise ValueError('data retrieval failed.')
-        return self._psiRZ.copy()
-
-    def getMachineCrossSection(self):
-        """Returns R,Z coordinates of vacuum-vessel wall for masking, plotting routines.
-
-        Returns:
-=======
          """        
 
         if self._psiRZ is None:
@@ -214,43 +140,10 @@ class NSTXEFITTree(EFITTree):
         """Returns R,Z coordinates of vacuum-vessel wall for masking, plotting routines.
 
         Returns:    
->>>>>>> dev
             The requested data.
         """
         if self._Rlimiter is None or self._Zlimiter is None:
             try:
-<<<<<<< HEAD
-                limitr = self._MDSTree.getNode(
-                    self._root+self._gfile+':limitr'
-                ).data()[0]
-                xlim = self._MDSTree.getNode(
-                    self._root+self._gfile+':rlim'
-                ).data()[0]
-                ylim = self._MDSTree.getNode(
-                    self._root+self._gfile+':zlim'
-                ).data()[0]
-                npts = len(xlim)
-
-                if npts < limitr:
-                    raise ValueError(
-                        "Dimensions inconsistent in limiter array lengths."
-                    )
-
-                self._Rlimiter = xlim[0:limitr]
-                self._Zlimiter = ylim[0:limitr]
-            except Exception:
-                raise ValueError("data retrieval failed.")
-        return (self._Rlimiter, self._Zlimiter)
-
-    def getFluxVol(self):
-        """Not implemented in NSTXEFIT tree.
-
-        Returns:
-            volume within flux surface [psi,t]
-        """
-        super(EFITTree, self).getFluxVol()
-
-=======
                 limitr = self._MDSTree.getNode(self._root+self._gfile+':limitr').data()[0]
                 xlim = self._MDSTree.getNode(self._root+self._gfile+':rlim').data()[0]
                 ylim = self._MDSTree.getNode(self._root+self._gfile+':zlim').data()[0]
@@ -274,57 +167,20 @@ class NSTXEFITTree(EFITTree):
         super(EFITTree,self).getFluxVol()
         
         
->>>>>>> dev
     def getRmidPsi(self, length_unit=1):
         """returns maximum major radius of each flux surface.
 
         Keyword Args:
-<<<<<<< HEAD
-            length_unit (String or 1): unit of Rmid.  Defaults to 1, indicating
-                the default parameter unit (typically m).
-
-        Returns:
-            Rmid (Array): [nt,npsi] array of maximum (outboard) major radius of
-=======
             length_unit (String or 1): unit of Rmid.  Defaults to 1, indicating 
                 the default parameter unit (typically m).
 
         Returns:
             Rmid (Array): [nt,npsi] array of maximum (outboard) major radius of 
->>>>>>> dev
             flux surface psi.
 
         Raises:
             Value Error: if module cannot retrieve data from MDS tree.
         """
-<<<<<<< HEAD
-
-        if self._RmidPsi is None:
-            try:
-                RmidPsiNode = self._MDSTree.getNode(
-                    self._root+'derived:psivsrz0'
-                )
-                self._RmidPsi = RmidPsiNode.data()
-                # Units aren't properly stored in the tree for this one!
-                if RmidPsiNode.units != ' ':
-                    self._defaultUnits['_RmidPsi'] = str(RmidPsiNode.units)
-                else:
-                    self._defaultUnits['_RmidPsi'] = 'm'
-            except Exception:
-                raise ValueError('data retrieval failed.')
-
-        if self._defaultUnits['_RmidPsi'] != 'Wb/rad':
-            unit_factor = self._getLengthConversionFactor(
-                self._defaultUnits['_RmidPsi'], length_unit
-            )
-        else:
-            unit_factor = numpy.array([1.])
-
-        with warnings.catch_warnings():
-            warnings.filterwarnings("ignore", category=RuntimeWarning)
-            return unit_factor * self._RmidPsi.copy()
-
-=======
         
         if self._RmidPsi is None:
             try:
@@ -347,7 +203,6 @@ class NSTXEFITTree(EFITTree):
             warnings.filterwarnings("ignore",category=RuntimeWarning)
             return unit_factor * self._RmidPsi.copy()
         
->>>>>>> dev
     def getIpCalc(self):
         """returns EFIT-calculated plasma current.
 
@@ -360,17 +215,6 @@ class NSTXEFITTree(EFITTree):
 
         if self._IpCalc is None:
             try:
-<<<<<<< HEAD
-                IpCalcNode = self._MDSTree.getNode(
-                    self._root+self._gfile+':cpasma'
-                )
-                self._IpCalc = IpCalcNode.data()
-                self._defaultUnits['_IpCalc'] = str(IpCalcNode.units)
-            except Exception:
-                raise ValueError('data retrieval failed.')
-        return self._IpCalc.copy()
-
-=======
                 IpCalcNode = self._MDSTree.getNode(self._root+self._gfile+':cpasma')
                 self._IpCalc = IpCalcNode.data()
                 self._defaultUnits['_IpCalc'] = IpCalcNode.units
@@ -379,16 +223,11 @@ class NSTXEFITTree(EFITTree):
         return self._IpCalc.copy()
 
         
->>>>>>> dev
     def getVolLCFS(self, length_unit=3):
         """returns volume within LCFS.
 
         Keyword Args:
-<<<<<<< HEAD
-            length_unit (String or 3): unit for LCFS volume.  Defaults to 3,
-=======
             length_unit (String or 3): unit for LCFS volume.  Defaults to 3, 
->>>>>>> dev
                 denoting default volumetric unit (typically m^3).
 
         Returns:
@@ -400,21 +239,6 @@ class NSTXEFITTree(EFITTree):
 
         if self._volLCFS is None:
             try:
-<<<<<<< HEAD
-                volLCFSNode = self._MDSTree.getNode(
-                    self._root+self._afile+':volume'
-                )
-                self._volLCFS = volLCFSNode.data()
-                self._defaultUnits['_volLCFS'] = str(volLCFSNode.units)
-            except Exception:
-                raise ValueError('data retrieval failed.')
-        # Default units should be 'cm^3':
-        unit_factor = self._getLengthConversionFactor(
-            self._defaultUnits['_volLCFS'], length_unit
-        )
-        return unit_factor * self._volLCFS.copy()
-
-=======
                 volLCFSNode = self._MDSTree.getNode(self._root+self._afile+':volume')
                 self._volLCFS = volLCFSNode.data()
                 self._defaultUnits['_volLCFS'] = volLCFSNode.units
@@ -424,22 +248,15 @@ class NSTXEFITTree(EFITTree):
         unit_factor = self._getLengthConversionFactor(self._defaultUnits['_volLCFS'], length_unit)
         return unit_factor * self._volLCFS.copy()
  
->>>>>>> dev
     def getJp(self):
         """Not implemented in NSTXEFIT tree.
 
         Returns:
             EFIT-calculated plasma current density Jp on flux grid [t,r,z]
         """
-<<<<<<< HEAD
-        super(EFITTree, self).getJp()
-
-    def rz2volnorm(self, *args, **kwargs):
-=======
         super(EFITTree,self).getJp()
 
     def rz2volnorm(self,*args,**kwargs):
->>>>>>> dev
         """ Calculated normalized volume of flux surfaces not stored in NSTX EFIT.
 
         Returns:
@@ -447,14 +264,9 @@ class NSTXEFITTree(EFITTree):
         """
         raise NotImplementedError()
 
-<<<<<<< HEAD
-    def psinorm2volnorm(self, *args, **kwargs):
-        """ Calculated normalized volume of flux surfaces not stored in NSTX EFIT.
-=======
 
     def psinorm2volnorm(self,*args,**kwargs):
         """ Calculated normalized volume of flux surfaces not stored in NSTX EFIT. 
->>>>>>> dev
 
         Returns:
             All maping with Volnorm not implemented

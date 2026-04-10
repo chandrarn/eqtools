@@ -18,18 +18,6 @@
 
 from .core import Equilibrium
 
-<<<<<<< HEAD
-import numpy
-
-
-class ArrayEquilibrium(Equilibrium):
-    """Class to represent an equilibrium specified as arrays of data.
-
-    Create ArrayEquilibrium instance from arrays of data.
-
-    Has very little checking on the shape/type of the arrays at this point.
-
-=======
 import scipy
 
 class ArrayEquilibrium(Equilibrium):
@@ -39,7 +27,6 @@ class ArrayEquilibrium(Equilibrium):
     
     Has very little checking on the shape/type of the arrays at this point.
     
->>>>>>> dev
     Args:
         psiRZ: Array-like, (M, N, P).
             Flux values at M times, N Z locations and P R locations.
@@ -64,20 +51,12 @@ class ArrayEquilibrium(Equilibrium):
         zmag: Array-like, (M,).
             Vertical coordinate of the magnetic axis, given at M times.
         Rout: Outboard midplane radius of the last closed flux surface.
-<<<<<<< HEAD
-
-=======
     
->>>>>>> dev
     Keyword Args:
         length_unit: String.
             Sets the base unit used for any quantity whose
             dimensions are length to any power. Valid options are:
-<<<<<<< HEAD
-
-=======
         
->>>>>>> dev
                 ===========  ===========================================================================================
                 'm'          meters
                 'cm'         centimeters
@@ -90,11 +69,7 @@ class ArrayEquilibrium(Equilibrium):
                 'hand'       hands
                 'default'    whatever the default in the tree is (no conversion is performed, units may be inconsistent)
                 ===========  ===========================================================================================
-<<<<<<< HEAD
-
-=======
         
->>>>>>> dev
             Default is 'm' (all units taken and returned in meters).
         tspline: Boolean.
             Sets whether or not interpolation in time is
@@ -115,20 +90,6 @@ class ArrayEquilibrium(Equilibrium):
     """
     def __init__(self, psiRZ, rGrid, zGrid, time, q, fluxVol, psiLCFS, psiAxis,
                  rmag, zmag, Rout, **kwargs):
-<<<<<<< HEAD
-        self._psiRZ = numpy.asarray(psiRZ, dtype=float)
-        self._rGrid = numpy.asarray(rGrid, dtype=float)
-        self._zGrid = numpy.asarray(zGrid, dtype=float)
-        self._time = numpy.asarray(time, dtype=float)
-        self._qpsi = numpy.asarray(q, dtype=float)
-        self._fluxVol = numpy.asarray(fluxVol, dtype=float)
-        self._psiLCFS = numpy.asarray(psiLCFS, dtype=float)
-        self._psiAxis = numpy.asarray(psiAxis, dtype=float)
-        self._rmag = numpy.asarray(rmag, dtype=float)
-        self._zmag = numpy.asarray(zmag, dtype=float)
-        self._RmidLCFS = numpy.asarray(Rout, dtype=float)
-
-=======
         self._psiRZ = scipy.asarray(psiRZ, dtype=float)
         self._rGrid = scipy.asarray(rGrid, dtype=float)
         self._zGrid = scipy.asarray(zGrid, dtype=float)
@@ -141,7 +102,6 @@ class ArrayEquilibrium(Equilibrium):
         self._zmag = scipy.asarray(zmag, dtype=float)
         self._RmidLCFS = scipy.asarray(Rout, dtype=float)
         
->>>>>>> dev
         self._defaultUnits = {}
         self._defaultUnits['_psiRZ'] = 'Wb/rad'
         self._defaultUnits['_rGrid'] = 'm'
@@ -156,47 +116,18 @@ class ArrayEquilibrium(Equilibrium):
         self._defaultUnits['_RmidLCFS'] = 'm'
         self._defaultUnits['_RLCFS'] = 'm'
         self._defaultUnits['_ZLCFS'] = 'm'
-<<<<<<< HEAD
-
-        super(ArrayEquilibrium, self).__init__(**kwargs)
-
-=======
         
         super(ArrayEquilibrium, self).__init__(**kwargs)
     
->>>>>>> dev
     def getTimeBase(self):
         """Returns a copy of the time base vector, array dimensions are (M,).
         """
         return self._time.copy()
-<<<<<<< HEAD
-
-=======
     
->>>>>>> dev
     def getFluxGrid(self):
         """Returns a copy of the flux array, dimensions are (M, N, P), corresponding to (time, Z, R).
         """
         return self._psiRZ.copy()
-<<<<<<< HEAD
-
-    def getRGrid(self, length_unit=1):
-        """Returns a copy of the radial grid, dimensions are (P,).
-        """
-        unit_factor = self._getLengthConversionFactor(
-            self._defaultUnits['_rGrid'], length_unit
-        )
-        return unit_factor * self._rGrid.copy()
-
-    def getZGrid(self, length_unit=1):
-        """Returns a copy of the vertical grid, dimensions are (N,).
-        """
-        unit_factor = self._getLengthConversionFactor(
-            self._defaultUnits['_zGrid'], length_unit
-        )
-        return unit_factor * self._zGrid.copy()
-
-=======
     
     def getRGrid(self, length_unit=1):
         """Returns a copy of the radial grid, dimensions are (P,).
@@ -212,22 +143,10 @@ class ArrayEquilibrium(Equilibrium):
                                                       length_unit)
         return unit_factor * self._zGrid.copy()
     
->>>>>>> dev
     def getQProfile(self):
         """Returns safety factor q profile (over Q values of psinorm from 0 to 1), dimensions are (Q, M)
         """
         return self._qpsi.copy()
-<<<<<<< HEAD
-
-    def getFluxVol(self, length_unit=3):
-        """returns volume within flux surface [psi,t]
-        """
-        unit_factor = self._getLengthConversionFactor(
-            self._defaultUnits['_fluxVol'], length_unit
-        )
-        return unit_factor * self._fluxVol.copy()
-
-=======
     
     def getFluxVol(self, length_unit=3):
         """returns volume within flux surface [psi,t]
@@ -235,59 +154,15 @@ class ArrayEquilibrium(Equilibrium):
         unit_factor = self._getLengthConversionFactor(self._defaultUnits['_fluxVol'], length_unit)
         return unit_factor * self._fluxVol.copy()
     
->>>>>>> dev
     def getFluxLCFS(self):
         """returns psi at separatrix [t]
         """
         return self._psiLCFS.copy()
-<<<<<<< HEAD
-
-=======
     
->>>>>>> dev
     def getFluxAxis(self):
         """returns psi on magnetic axis [t]
         """
         return self._psiAxis.copy()
-<<<<<<< HEAD
-
-    def getMagR(self, length_unit=1):
-        """returns magnetic-axis major radius [t]
-        """
-        unit_factor = self._getLengthConversionFactor(
-            self._defaultUnits['_rmag'], length_unit
-        )
-        return unit_factor * self._rmag.copy()
-
-    def getMagZ(self, length_unit=1):
-        """returns magnetic-axis Z [t]
-        """
-        unit_factor = self._getLengthConversionFactor(
-            self._defaultUnits['_zmag'], length_unit
-        )
-        return unit_factor * self._zmag.copy()
-
-    def getRmidOut(self, length_unit=1):
-        """returns outboard-midplane major radius [t]
-        """
-        unit_factor = self._getLengthConversionFactor(
-            self._defaultUnits['_RmidLCFS'], length_unit
-        )
-        return unit_factor * self._RmidLCFS.copy()
-
-    def getRLCFS(self, length_unit=1):
-        raise NotImplementedError(
-            "getRLCFS not supported for ArrayEquilibrium!"
-        )
-
-    def getZLCFS(self, length_unit=1):
-        raise NotImplementedError(
-            "getRLCFS not supported for ArrayEquilibrium!"
-        )
-
-    def getCurrentSign(self):
-        return 1
-=======
     
     def getMagR(self, length_unit=1):
         """returns magnetic-axis major radius [t]
@@ -315,4 +190,3 @@ class ArrayEquilibrium(Equilibrium):
     
     def getCurrentSign(self):
         return 1
->>>>>>> dev
