@@ -22,8 +22,8 @@
 __version__ = '1.5.0'
 
 from .core import *
-# from .EFIT import *
-# from .CModEFIT import *
+from .EFIT import *
+from .CModEFIT import *
 # from .AUGData import *
 # from .NSTXEFIT import *
 # from .D3DEFIT import *

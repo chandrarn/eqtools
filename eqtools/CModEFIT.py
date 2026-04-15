@@ -16,49 +16,17 @@
 # You should have received a copy of the GNU General Public License
 # along with EqTools.  If not, see <http://www.gnu.org/licenses/>.
 
-<<<<<<< HEAD
-"""This module provides classes inheriting :py:class:`eqtools.EFIT.EFITTree` for
-working with C-Mod EFIT data.
-"""
-
-import numpy as np
-=======
 """This module provides classes inheriting :py:class:`eqtools.EFIT.EFITTree` for 
 working with C-Mod EFIT data.
 """
 
 import scipy
->>>>>>> dev
 
 from .EFIT import EFITTree
 from .core import PropertyAccessMixin, ModuleWarning
 
 import warnings
 
-<<<<<<< HEAD
-try:
-    import MDSplus
-    _has_MDS = True
-except Exception as _e_MDS:
-    if isinstance(_e_MDS, ImportError):
-        warnings.warn(
-            "MDSplus module could not be loaded -- classes that use "
-            "MDSplus for data access will not work.",
-            ModuleWarning
-        )
-    else:
-        warnings.warn(
-            "MDSplus module could not be loaded -- classes that use "
-            "MDSplus for data access will not work. Exception raised "
-            "was of type {:s}, message was '{:s}'.".format(
-                _e_MDS.__class__, _e_MDS.message
-            ),
-            ModuleWarning
-        )
-    _has_MDS = False
-
-
-=======
 class TreeException(Exception):pass
 
 try:
@@ -79,7 +47,6 @@ except Exception as _e_MDS:
                       ModuleWarning)
     _has_MDS = False
 
->>>>>>> dev
 class CModEFITTree(EFITTree):
     """Inherits :py:class:`eqtools.EFIT.EFITTree` class. Machine-specific data
     handling class for Alcator C-Mod. Pulls EFIT data from selected MDS tree
@@ -87,26 +54,15 @@ class CModEFITTree(EFITTree):
     variables is recovered with a corresponding getter method. Essential data
     for EFIT mapping are pulled on initialization (e.g. psirz grid). Additional
     data are pulled at the first request and stored for subsequent usage.
-<<<<<<< HEAD
-
-    Intializes C-Mod version of EFITTree object.  Pulls data from MDS tree for
-    storage in instance attributes.  Core attributes are populated from the MDS
-    tree on initialization.  Additional attributes are initialized as None,
-=======
     
     Intializes C-Mod version of EFITTree object.  Pulls data from MDS tree for 
     storage in instance attributes.  Core attributes are populated from the MDS 
     tree on initialization.  Additional attributes are initialized as None, 
->>>>>>> dev
     filled on the first request to the object.
 
     Args:
         shot (integer): C-Mod shot index.
-<<<<<<< HEAD
-
-=======
     
->>>>>>> dev
     Keyword Args:
         tree (string): Optional input for EFIT tree, defaults to 'ANALYSIS'
             (i.e., EFIT data are under \\analysis::top.efit.results).
@@ -114,11 +70,7 @@ class CModEFITTree(EFITTree):
             data are taken from \\TREE::top.results.
         length_unit (string): Sets the base unit used for any quantity whose
             dimensions are length to any power. Valid options are:
-<<<<<<< HEAD
-
-=======
                 
->>>>>>> dev
                 ===========  ===========================================================================================
                 'm'          meters
                 'cm'         centimeters
@@ -131,15 +83,6 @@ class CModEFITTree(EFITTree):
                 'hand'       hands
                 'default'    whatever the default in the tree is (no conversion is performed, units may be inconsistent)
                 ===========  ===========================================================================================
-<<<<<<< HEAD
-
-            Default is 'm' (all units taken and returned in meters).
-        gfile (string): Optional input for EFIT geqdsk location name,
-            defaults to 'g_eqdsk' (i.e., EFIT data are under
-            \\tree::top.results.G_EQDSK)
-        afile (string): Optional input for EFIT aeqdsk location name,
-            defaults to 'a_eqdsk' (i.e., EFIT data are under
-=======
                 
             Default is 'm' (all units taken and returned in meters).
         gfile (string): Optional input for EFIT geqdsk location name, 
@@ -147,7 +90,6 @@ class CModEFITTree(EFITTree):
             \\tree::top.results.G_EQDSK)
         afile (string): Optional input for EFIT aeqdsk location name,
             defaults to 'a_eqdsk' (i.e., EFIT data are under 
->>>>>>> dev
             \\tree::top.results.A_EQDSK)
         tspline (Boolean): Sets whether or not interpolation in time is
             performed using a tricubic spline or nearest-neighbor
@@ -160,33 +102,19 @@ class CModEFITTree(EFITTree):
             window finding is used. If True, the timebase must be monotonically
             increasing. Default is False (use slower, safer method).
     """
-<<<<<<< HEAD
-    def __init__(self, shot, tree='ANALYSIS', length_unit='m', gfile='g_eqdsk',
-=======
     def __init__(self, shot, tree='ANALYSIS', length_unit='m', gfile='g_eqdsk', 
->>>>>>> dev
                  afile='a_eqdsk', tspline=False, monotonic=True):
         if tree.upper() == 'ANALYSIS':
             root = '\\analysis::top.efit.results.'
         else:
             root = '\\'+tree+'::top.results.'
 
-<<<<<<< HEAD
-        super(CModEFITTree, self).__init__(
-            shot, tree, root,
-            length_unit=length_unit, gfile=gfile, afile=afile,
-            tspline=tspline, monotonic=monotonic
-        )
-
-        self.getFluxVol()  # getFluxVol is called due to wide use on C-Mod
-=======
         
         super(CModEFITTree, self).__init__(shot, tree, root, 
               length_unit=length_unit, gfile=gfile, afile=afile, 
               tspline=tspline, monotonic=monotonic)
         
         self.getFluxVol() #getFluxVol is called due to wide use on C-Mod
->>>>>>> dev
 
     def getFluxVol(self, length_unit=3):
         """returns volume within flux surface.
@@ -203,21 +131,6 @@ class CModEFITTree(EFITTree):
         """
         if self._fluxVol is None:
             try:
-<<<<<<< HEAD
-                fluxVolNode = self._MDSTree.getNode(self._root + 'fitout:volp')
-                self._fluxVol = fluxVolNode.data().T
-                # Units aren't properly stored in the tree for this one!
-                if fluxVolNode.units != ' ':
-                    self._defaultUnits['_fluxVol'] = str(fluxVolNode.units)
-                else:
-                    self._defaultUnits['_fluxVol'] = 'm^3'
-            except Exception:
-                raise ValueError('data retrieval failed.')
-        # Default units are m^3, but aren't stored in the tree!
-        unit_factor = self._getLengthConversionFactor(
-            self._defaultUnits['_fluxVol'], length_unit
-        )
-=======
                 fluxVolNode = self._MDSTree.getNode(self._root+'fitout:volp')
                 self._fluxVol = fluxVolNode.data().T
                 # Units aren't properly stored in the tree for this one!
@@ -229,26 +142,17 @@ class CModEFITTree(EFITTree):
                 raise ValueError('data retrieval failed.')
         # Default units are m^3, but aren't stored in the tree!
         unit_factor = self._getLengthConversionFactor(self._defaultUnits['_fluxVol'], length_unit)
->>>>>>> dev
         return unit_factor * self._fluxVol.copy()
 
     def getRmidPsi(self, length_unit=1):
         """returns maximum major radius of each flux surface.
 
         Keyword Args:
-<<<<<<< HEAD
-            length_unit (String or 1): unit of Rmid.  Defaults to 1, indicating
-                the default parameter unit (typically m).
-
-        Returns:
-            Rmid (Array): [nt,npsi] array of maximum (outboard) major radius of
-=======
             length_unit (String or 1): unit of Rmid.  Defaults to 1, indicating 
                 the default parameter unit (typically m).
 
         Returns:
             Rmid (Array): [nt,npsi] array of maximum (outboard) major radius of 
->>>>>>> dev
             flux surface psi.
 
         Raises:
@@ -260,20 +164,6 @@ class CModEFITTree(EFITTree):
                 self._RmidPsi = RmidPsiNode.data().T
                 # Units aren't properly stored in the tree for this one!
                 if RmidPsiNode.units != ' ':
-<<<<<<< HEAD
-                    self._defaultUnits['_RmidPsi'] = str(RmidPsiNode.units)
-                else:
-                    self._defaultUnits['_RmidPsi'] = 'm'
-            except Exception:
-                raise ValueError('data retrieval failed.')
-        unit_factor = self._getLengthConversionFactor(
-            self._defaultUnits['_RmidPsi'], length_unit
-        )
-        return unit_factor * self._RmidPsi.copy()
-
-    def getF(self):
-        r"""returns F=RB_{\Phi}(\Psi), often calculated for grad-shafranov
-=======
                     self._defaultUnits['_RmidPsi'] = RmidPsiNode.units
                 else:
                     self._defaultUnits['_RmidPsi'] = 'm'
@@ -284,7 +174,6 @@ class CModEFITTree(EFITTree):
 
     def getF(self):
         """returns F=RB_{\Phi}(\Psi), often calculated for grad-shafranov 
->>>>>>> dev
         solutions.
 
         Returns:
@@ -297,19 +186,11 @@ class CModEFITTree(EFITTree):
             try:
                 fNode = self._MDSTree.getNode(self._root+self._gfile+':fpol')
                 self._fpol = fNode.data().T
-<<<<<<< HEAD
-                self._defaultUnits['_fpol'] = str(fNode.units)
-            except Exception:
-                raise ValueError('data retrieval failed.')
-        return self._fpol.copy()
-
-=======
                 self._defaultUnits['_fpol'] = fNode.units
             except TreeException:
                 raise ValueError('data retrieval failed.')
         return self._fpol.copy()
     
->>>>>>> dev
     def getFluxPres(self):
         """returns pressure at flux surface.
 
@@ -321,19 +202,10 @@ class CModEFITTree(EFITTree):
         """
         if self._fluxPres is None:
             try:
-<<<<<<< HEAD
-                fluxPresNode = self._MDSTree.getNode(
-                    self._root + self._gfile + ':pres'
-                )
-                self._fluxPres = fluxPresNode.data().T
-                self._defaultUnits['_fluxPres'] = str(fluxPresNode.units)
-            except Exception:
-=======
                 fluxPresNode = self._MDSTree.getNode(self._root+self._gfile+':pres')
                 self._fluxPres = fluxPresNode.data().T
                 self._defaultUnits['_fluxPres'] = fluxPresNode.units
             except TreeException:
->>>>>>> dev
                 raise ValueError('data retrieval failed.')
         return self._fluxPres.copy()
 
@@ -348,19 +220,10 @@ class CModEFITTree(EFITTree):
         """
         if self._ffprim is None:
             try:
-<<<<<<< HEAD
-                FFPrimeNode = self._MDSTree.getNode(
-                    self._root + self._gfile + ':ffprim'
-                )
-                self._ffprim = FFPrimeNode.data().T
-                self._defaultUnits['_ffprim'] = str(FFPrimeNode.units)
-            except Exception:
-=======
                 FFPrimeNode = self._MDSTree.getNode(self._root+self._gfile+':ffprim')
                 self._ffprim = FFPrimeNode.data().T
                 self._defaultUnits['_ffprim'] = FFPrimeNode.units
             except TreeException:
->>>>>>> dev
                 raise ValueError('data retrieval failed.')
         return self._ffprim.copy()
 
@@ -368,11 +231,7 @@ class CModEFITTree(EFITTree):
         """returns plasma pressure gradient as a function of psi.
 
         Returns:
-<<<<<<< HEAD
-            pprime (Array): [nt,npsi] array of pressure gradient on flux surface
-=======
             pprime (Array): [nt,npsi] array of pressure gradient on flux surface 
->>>>>>> dev
             psi from grad-shafranov solution.
 
         Raises:
@@ -380,19 +239,10 @@ class CModEFITTree(EFITTree):
         """
         if self._pprime is None:
             try:
-<<<<<<< HEAD
-                pPrimeNode = self._MDSTree.getNode(
-                    self._root + self._gfile + ':pprime'
-                )
-                self._pprime = pPrimeNode.data().T
-                self._defaultUnits['_pprime'] = str(pPrimeNode.units)
-            except Exception:
-=======
                 pPrimeNode = self._MDSTree.getNode(self._root+self._gfile+':pprime')
                 self._pprime = pPrimeNode.data().T
                 self._defaultUnits['_pprime'] = pPrimeNode.units
             except TreeException:
->>>>>>> dev
                 raise ValueError('data retrieval failed.')
         return self._pprime.copy()
 
@@ -407,19 +257,10 @@ class CModEFITTree(EFITTree):
         """
         if self._qpsi is None:
             try:
-<<<<<<< HEAD
-                qpsiNode = self._MDSTree.getNode(
-                    self._root + self._gfile + ':qpsi'
-                )
-                self._qpsi = qpsiNode.data().T
-                self._defaultUnits['_qpsi'] = str(qpsiNode.units)
-            except Exception:
-=======
                 qpsiNode = self._MDSTree.getNode(self._root+self._gfile+':qpsi')
                 self._qpsi = qpsiNode.data().T
                 self._defaultUnits['_qpsi'] = qpsiNode.units
             except TreeException:
->>>>>>> dev
                 raise ValueError('data retrieval failed.')
         return self._qpsi.copy()
 
@@ -434,25 +275,12 @@ class CModEFITTree(EFITTree):
         """
         if self._RLCFS is None:
             try:
-<<<<<<< HEAD
-                RLCFSNode = self._MDSTree.getNode(
-                    self._root + self._gfile + ':rbbbs'
-                )
-                self._RLCFS = RLCFSNode.data().T
-                self._defaultUnits['_RLCFS'] = str(RLCFSNode.units)
-            except Exception:
-                raise ValueError('data retrieval failed.')
-        unit_factor = self._getLengthConversionFactor(
-            self._defaultUnits['_RLCFS'], length_unit
-        )
-=======
                 RLCFSNode = self._MDSTree.getNode(self._root+self._gfile+':rbbbs')
                 self._RLCFS = RLCFSNode.data().T
                 self._defaultUnits['_RLCFS'] = RLCFSNode.units
             except TreeException:
                 raise ValueError('data retrieval failed.')
         unit_factor = self._getLengthConversionFactor(self._defaultUnits['_RLCFS'], length_unit)
->>>>>>> dev
         return unit_factor * self._RLCFS.copy()
 
     def getZLCFS(self, length_unit=1):
@@ -466,19 +294,6 @@ class CModEFITTree(EFITTree):
         """
         if self._ZLCFS is None:
             try:
-<<<<<<< HEAD
-                ZLCFSNode = self._MDSTree.getNode(
-                    self._root + self._gfile + ':zbbbs'
-                )
-                self._ZLCFS = ZLCFSNode.data().T
-                self._defaultUnits['_ZLCFS'] = str(ZLCFSNode.units)
-            except Exception:
-                raise ValueError('data retrieval failed.')
-        unit_factor = self._getLengthConversionFactor(
-            self._defaultUnits['_ZLCFS'], length_unit
-        )
-        return unit_factor * self._ZLCFS.copy()
-=======
                 ZLCFSNode = self._MDSTree.getNode(self._root+self._gfile+':zbbbs')
                 self._ZLCFS = ZLCFSNode.data().T
                 self._defaultUnits['_ZLCFS'] = ZLCFSNode.units
@@ -487,7 +302,6 @@ class CModEFITTree(EFITTree):
         unit_factor = self._getLengthConversionFactor(self._defaultUnits['_ZLCFS'], length_unit)
         return unit_factor * self._ZLCFS.copy()
         
->>>>>>> dev
 
     def getMachineCrossSectionFull(self):
         """Pulls C-Mod cross-section data from tree, converts to plottable
@@ -502,11 +316,7 @@ class CModEFITTree(EFITTree):
         Raises:
             ValueError: if module cannot retrieve data from MDS tree.
         """
-<<<<<<< HEAD
-        # pull cross-section from tree
-=======
         #pull cross-section from tree
->>>>>>> dev
         try:
             ccT = MDSplus.Tree('analysis', self._shot)
             path = '\\analysis::top.limiters.tiles:'
@@ -514,17 +324,6 @@ class CModEFITTree(EFITTree):
             yvctr = ccT.getNode(path+'YTILE').data()
             nvctr = ccT.getNode(path+'NSEG').data()
             lvctr = ccT.getNode(path+'PTS_PER_SEG').data()
-<<<<<<< HEAD
-        except Exception:
-            raise ValueError('data load failed.')
-
-        # xvctr, yvctr stored as [nvctr,npts] ndarray.  Each of [nvctr] rows
-        # represents the x- or y- coordinate of a line segment; lvctr stores the length
-        # of each line segment row.  x/yvctr rows padded out to npts = max(lvctr) with
-        # uniform zeros.  To rapidly plot this, we want to flatten xvctr,yvctr down to
-        # a single x,y vector set.  We'll use Nones to separate line segments (as these
-        # break the continuous plotting joints).
-=======
         except Exception as e:
             raise ValueError(e,'data load failed.')
 
@@ -534,66 +333,25 @@ class CModEFITTree(EFITTree):
         #uniform zeros.  To rapidly plot this, we want to flatten xvctr,yvctr down to
         #a single x,y vector set.  We'll use Nones to separate line segments (as these
         #break the continuous plotting joints).
->>>>>>> dev
         x = []
         y = []
         for i in range(nvctr):
             length = lvctr[i]
-<<<<<<< HEAD
-            xseg = xvctr[i, 0:length]
-            yseg = yvctr[i, 0:length]
-=======
             xseg = xvctr[i,0:length]
             yseg = yvctr[i,0:length]
->>>>>>> dev
             x.extend(xseg)
             y.extend(yseg)
             if i != nvctr-1:
                 x.append(None)
                 y.append(None)
 
-<<<<<<< HEAD
-        x = np.array(x)
-        y = np.array(y)
-        return (x, y)
-
-    def getRCentr(self, length_unit=1):
-        """returns EFIT radius where Bcentr evaluated
-
-        Returns:
-            R: Radial position where Bcent calculated [m]
-
-        Raises:
-            ValueError: if module cannot retrieve data from MDS tree.
-        """
-        if self._RCentr is None:
-            try:
-                RCentrNode = self._MDSTree.getNode(
-                    self._root + self._afile + ':RCENCM'
-                )
-                self._RCentr = RCentrNode.data()
-                self._defaultUnits['_RCentr'] = str(RCentrNode.units)
-            except Exception:
-                raise ValueError('data retrieval failed.')
-
-        unit_factor = self._getLengthConversionFactor(
-            self._defaultUnits['_RCentr'], length_unit
-        )
-        return unit_factor * self._RCentr.copy()
-
-=======
         x = scipy.array(x)
         y = scipy.array(y)
         return (x, y)
 
->>>>>>> dev
 
 class CModEFITTreeProp(CModEFITTree, PropertyAccessMixin):
     """CModEFITTree with the PropertyAccessMixin added to enable property-style
     access. This is good for interactive use, but may drag the performance down.
     """
-<<<<<<< HEAD
     pass
-=======
-    pass
->>>>>>> dev
